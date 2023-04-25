@@ -31,12 +31,11 @@ def main():
     clock = pg.time.Clock()
     bg_img = pg.image.load("ex01/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex01/fig/3.png")
-    kkc_img = pg.image.load("ex01/fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     kk_rct = kk_img.get_rect() # 練習4
     kk_rct.center = 900, 400 # 練習4
-
-    bb_img = pg.Surface((20, 20)) # 練習１
+    m = 1 # 演習2
+    bb_img = pg.Surface((20*m, 20*m)) # 練習１
     pg.draw.circle(bb_img, (255, 0, 0),(10, 10), 10) # 練習1
     bb_img.set_colorkey((0, 0, 0)) # 練習１
     x, y = random.randint(0,1600), random.randint(0, 900) # 練習2
@@ -45,8 +44,8 @@ def main():
     vx, vy = +1, +1 # 練習3
     bb_rct = bb_img.get_rect() # 練習3
     bb_rct.center = x, y # 練習3
-    bb_imgs = []
-    kk_lst = { # 演習1
+    bb_imgs = [] # 演習2 # 空のリストbb_imgsを作る
+    kk_lst = { # 演習1 未完成
         (0, -1):pg.transform.rotozoom(kk_img,0,1),
         (+1, -1):pg.transform.rotozoom(kk_img,45,1),
         (+1, 0):pg.transform.rotozoom(kk_img,90,1),
@@ -56,6 +55,13 @@ def main():
         (-1, 0):pg.transform.rotozoom(kk_img,270,1),
         (-1, -1):pg.transform.rotozoom(kk_img,315,1)
     }
+    for r in range(1, 11): # 演習2 10段階で大きくなる
+        bb_img = pg.Surface((20*r,20*r)) # 演習2
+        pg.draw.circle(bb_img,(255,0,0), (10*r, 10*r), 10*r) # 演習2 半径にrをかけて大きさを変える
+        bb_img.set_colorkey((0,0,0)) # 演習2 黒色を透過させる
+        bb_imgs.append(bb_img) # 演習2 リストbb_imgsへ追加する
+        m = r # 演習2
+
     tmr = 0
 
     while True:
@@ -73,6 +79,7 @@ def main():
             for k, mv in delta.items(): # 練習5
                 if key_lst[k]: # 練習5
                     kk_rct.move_ip(-mv[0],-mv[1]) # 練習5
+    
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct) # 練習4
@@ -83,13 +90,7 @@ def main():
         if not tate: # 縦方向にはみ出ていたら　# 練習5
             vy *= -1 # 練習5
         screen.blit(bb_img, bb_rct) # 練習3
-        for r in range(1, 11): # 演習2
-            bb_img = pg.Surface((20*r,20*r)) # 演習2
-            pg.draw.circle(bb_img,(255, 0, 0), (10*r, 10*r), 10*r) # 演習2
-            bb_img.set_colorkey((0,0,0))
-            bb_imgs.append(bb_img) # 演習2
-        bb_img = bb_imgs[min(tmr//1000, 9)] #演習2
-        
+        bb_img = bb_imgs[min(tmr//1000, 9)] # 演習2
         if kk_rct.colliderect(bb_rct): # 練習6
             return  # 練習6
         

@@ -70,6 +70,8 @@ def main():
         if not tate: # 縦方向にはみ出ていたら　# 練習5
             vy *= -1 # 練習5
         screen.blit(bb_img, bb_rct) # 練習3
+        if kk_rct.colliderect(bb_rct): # 練習6
+            return  #練習6
         
 
         pg.display.update()

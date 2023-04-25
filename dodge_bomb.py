@@ -9,6 +9,7 @@ delta = { # 練習4
         pg.K_LEFT: (-1, 0),
         pg.K_RIGHT: (+1, 0)
     }
+accs = [a for a in range(1, 11)]
 
 def check_bound(scr_rct: pg.Rect,obj_rct:pg.Rect) -> tuple[bool, bool]: # 練習5
     """
@@ -30,6 +31,7 @@ def main():
     clock = pg.time.Clock()
     bg_img = pg.image.load("ex01/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex01/fig/3.png")
+    kkc_img = pg.image.load("ex01/fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     kk_rct = kk_img.get_rect() # 練習4
     kk_rct.center = 900, 400 # 練習4
@@ -43,19 +45,20 @@ def main():
     vx, vy = +1, +1 # 練習3
     bb_rct = bb_img.get_rect() # 練習3
     bb_rct.center = x, y # 練習3
-    
+    bb_imgs = []
     tmr = 0
 
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
-                return 0
+                return
 
         tmr += 1
         key_lst = pg.key.get_pressed() #練習4
         for k, mv in delta.items(): # 練習4
             if key_lst[k]: # 練習4
-                kk_rct.move_ip(mv) # 練習4
+                kk_rct.move_ip(mv) # 練習4 
+        
         if check_bound(screen.get_rect(),kk_rct) != (True, True):
             for k, mv in delta.items(): # 練習5
                 if key_lst[k]: # 練習5
@@ -70,8 +73,15 @@ def main():
         if not tate: # 縦方向にはみ出ていたら　# 練習5
             vy *= -1 # 練習5
         screen.blit(bb_img, bb_rct) # 練習3
+        for r in range(1, 11): # 演習2
+            bb_img = pg.Surface((20*r,20*r)) # 演習2
+            pg.draw.circle(bb_img,(255, 0, 0), (10*r, 10*r), 10*r) # 演習2
+            bb_img.set_colorkey((0,0,0))
+            bb_imgs.append(bb_img) # 演習2
+        bb_img = bb_imgs[min(tmr//1000, 9)] #演習2
+        
         if kk_rct.colliderect(bb_rct): # 練習6
-            return  #練習6
+            return  # 練習6
         
 
         pg.display.update()
